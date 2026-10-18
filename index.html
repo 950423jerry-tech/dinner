@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>今日晚餐吃什麼？互動決策抽籤機</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes slot-shake {
+      0%, 100% { transform: translateY(0); }
+      25% { transform: translateY(-5px); }
+      75% { transform: translateY(5px); }
+    }
+    .anim-shake {
+      animation: slot-shake 0.1s infinite;
+    }
+  </style>
+</head>
+<body class="bg-amber-50 text-slate-800 min-h-screen font-sans pb-12">
+
+  <!-- Header -->
+  <header class="bg-amber-500 text-white py-6 px-4 mb-8 text-center shadow-md">
+    <h1 class="text-3xl font-bold mb-2">🍜 今日晚餐吃什麼？</h1>
+    <p class="text-amber-100 text-sm">VibeCoding 2026 互動網頁專案 | 解決選擇困難症的晚餐抽籤工具</p>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <!-- 1. 抽籤卡片 -->
+    <section class="bg-white p-6 rounded-2xl border border-amber-200 shadow-md md:col-span-2 flex flex-col justify-between text-center">
+      <div>
+        <h2 class="text-xl font-bold text-amber-600 mb-4">🎰 命運大轉盤</h2>
+        
+        <!-- 顯示結果框 -->
+        <div class="bg-amber-100 border-2 border-dashed border-amber-400 rounded-2xl p-8 my-4 flex flex-col items-center justify-center min-h-[180px]">
+          <div id="food-emoji" class="text-6xl mb-2">🍱</div>
+          <div id="food-result" class="text-3xl font-black text-amber-800">準備好開抽了嗎？</div>
+          <div id="food-tag" class="mt-2 text-sm px-3 py-1 bg-amber-200 text-amber-900 rounded-full font-medium">點擊下方按鈕</div>
+        </div>
+      </div>
+
+      <button onclick="drawFood()" id="draw-btn" class="w-full bg-amber-500 hover:bg-amber-600 text-white text-xl font-bold py-4 rounded-xl shadow-lg transition active:scale-95">
+        🎲 幫我決定今天的晚餐！
+      </button>
+    </section>
+
+    <!-- 2. 分類篩選器 -->
+    <section class="bg-white p-6 rounded-2xl border border-amber-200 shadow-md">
+      <h2 class="text-xl font-bold text-amber-600 mb-4 border-b pb-2">🎯 種類篩選</h2>
+      <div class="space-y-2" id="category-filters">
+        <button onclick="filterCategory('全部')" class="cat-btn w-full text-left px-4 py-2 rounded-lg font-bold bg-amber-500 text-white">全部類型</button>
+        <button onclick="filterCategory('台式經典')" class="cat-btn w-full text-left px-4 py-2 rounded-lg font-bold bg-slate-100 hover:bg-amber-100 text-slate-700">滷肉飯 / 台式小吃</button>
+        <button onclick="filterCategory('日韓料理')" class="cat-btn w-full text-left px-4 py-2 rounded-lg font-bold bg-slate-100 hover:bg-amber-100 text-slate-700">拉麵 / 韓式炸雞</button>
+        <button onclick="filterCategory('美式異國')" class="cat-btn w-full text-left px-4 py-2 rounded-lg font-bold bg-slate-100 hover:bg-amber-100 text-slate-700">漢堡 / 披薩</button>
+        <button onclick="filterCategory('健康輕食')" class="cat-btn w-full text-left px-4 py-2 rounded-lg font-bold bg-slate-100 hover:bg-amber-100 text-slate-7
