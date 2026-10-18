@@ -48,8 +48,127 @@
     <section class="bg-white p-6 rounded-2xl border border-amber-200 shadow-md">
       <h2 class="text-xl font-bold text-amber-600 mb-4 border-b pb-2">🎯 種類篩選</h2>
       <div class="space-y-2" id="category-filters">
-        <button onclick="filterCategory('全部')" class="cat-btn w-full text-left px-4 py-2 rounded-lg font-bold bg-amber-500 text-white">全部類型</button>
-        <button onclick="filterCategory('台式經典')" class="cat-btn w-full text-left px-4 py-2 rounded-lg font-bold bg-slate-100 hover:bg-amber-100 text-slate-700">滷肉飯 / 台式小吃</button>
-        <button onclick="filterCategory('日韓料理')" class="cat-btn w-full text-left px-4 py-2 rounded-lg font-bold bg-slate-100 hover:bg-amber-100 text-slate-700">拉麵 / 韓式炸雞</button>
-        <button onclick="filterCategory('美式異國')" class="cat-btn w-full text-left px-4 py-2 rounded-lg font-bold bg-slate-100 hover:bg-amber-100 text-slate-700">漢堡 / 披薩</button>
-        <button onclick="filterCategory('健康輕食')" class="cat-btn w-full text-left px-4 py-2 rounded-lg font-bold bg-slate-100 hover:bg-amber-100 text-slate-7
+        <button onclick="filterCategory('全部', event)" class="cat-btn w-full text-left px-4 py-2 rounded-lg font-bold bg-amber-500 text-white">全部類型</button>
+        <button onclick="filterCategory('台式經典', event)" class="cat-btn w-full text-left px-4 py-2 rounded-lg font-bold bg-slate-100 hover:bg-amber-100 text-slate-700">滷肉飯 / 台式小吃</button>
+        <button onclick="filterCategory('日韓料理', event)" class="cat-btn w-full text-left px-4 py-2 rounded-lg font-bold bg-slate-100 hover:bg-amber-100 text-slate-700">拉麵 / 韓式炸雞</button>
+        <button onclick="filterCategory('美式異國', event)" class="cat-btn w-full text-left px-4 py-2 rounded-lg font-bold bg-slate-100 hover:bg-amber-100 text-slate-700">漢堡 / 披薩</button>
+        <button onclick="filterCategory('健康輕食', event)" class="cat-btn w-full text-left px-4 py-2 rounded-lg font-bold bg-slate-100 hover:bg-amber-100 text-slate-700">健康餐 / 溫沙拉</button>
+      </div>
+    </section>
+
+    <!-- 3. 自訂菜單清單 -->
+    <section class="bg-white p-6 rounded-2xl border border-amber-200 shadow-md md:col-span-3">
+      <h2 class="text-xl font-bold text-amber-600 mb-4 border-b pb-2">✏️ 新增自訂選項</h2>
+      <div class="flex gap-2 mb-4">
+        <input type="text" id="custom-name" placeholder="輸入美食名稱 (如: 火鍋)" class="flex-1 border border-slate-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-amber-500">
+        <button onclick="addCustomFood()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-2 rounded-lg transition text-sm">新增</button>
+      </div>
+
+      <div class="flex flex-wrap gap-2" id="food-list-tags">
+        <!-- 動態渲染選項標籤 -->
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    let foods = [
+      { name: "牛肉麵", emoji: "🍜", category: "台式經典" },
+      { name: "滷肉飯加蛋", emoji: "🍚", category: "台式經典" },
+      { name: "日式拉麵", emoji: "🍜", category: "日韓料理" },
+      { name: "韓式泡菜鍋", emoji: "🍲", category: "日韓料理" },
+      { name: "美式牛肉堡", emoji: "🍔", category: "美式異國" },
+      { name: "義大利麵", emoji: "🍝", category: "美式異國" },
+      { name: "舒肥雞肉健康餐", emoji: "🥗", category: "健康輕食" },
+      { name: "鮮蝦溫沙拉", emoji: "🥗", category: "健康輕食" },
+      { name: "鹹酥雞", emoji: "🍗", category: "台式經典" }
+    ];
+
+    let currentCategory = "全部";
+
+    function getFilteredFoods() {
+      if (currentCategory === "全部") return foods;
+      return foods.filter(f => f.category === currentCategory);
+    }
+
+    function renderTags() {
+      const container = document.getElementById("food-list-tags");
+      if (!container) return;
+      container.innerHTML = "";
+      getFilteredFoods().forEach((f, idx) => {
+        const tag = document.createElement("span");
+        tag.className = "px-3 py-1.5 bg-amber-100 text-amber-900 rounded-lg text-sm font-medium flex items-center gap-1 border border-amber-200";
+        tag.innerHTML = `${f.emoji} ${f.name} <button onclick="removeFood(${idx})" class="text-amber-500 hover:text-rose-500 font-bold ml-1">✕</button>`;
+        container.appendChild(tag);
+      });
+    }
+
+    function filterCategory(cat, evt) {
+      currentCategory = cat;
+      document.querySelectorAll(".cat-btn").forEach(btn => {
+        btn.className = "cat-btn w-full text-left px-4 py-2 rounded-lg font-bold bg-slate-100 hover:bg-amber-100 text-slate-700";
+      });
+      if (evt && evt.target) {
+        evt.target.className = "cat-btn w-full text-left px-4 py-2 rounded-lg font-bold bg-amber-500 text-white";
+      }
+      renderTags();
+    }
+
+    function drawFood() {
+      const list = getFilteredFoods();
+      if (list.length === 0) {
+        alert("這個分類下沒有選項囉，請先新增一些美食！");
+        return;
+      }
+
+      const resultBox = document.getElementById("food-result");
+      const emojiBox = document.getElementById("food-emoji");
+      const tagBox = document.getElementById("food-tag");
+      const btn = document.getElementById("draw-btn");
+
+      btn.disabled = true;
+      resultBox.classList.add("anim-shake");
+
+      let count = 0;
+      const timer = setInterval(() => {
+        const temp = list[Math.floor(Math.random() * list.length)];
+        resultBox.innerText = temp.name;
+        emojiBox.innerText = temp.emoji;
+        count++;
+
+        if (count > 15) {
+          clearInterval(timer);
+          resultBox.classList.remove("anim-shake");
+          const finalChoice = list[Math.floor(Math.random() * list.length)];
+          resultBox.innerText = finalChoice.name;
+          emojiBox.innerText = finalChoice.emoji;
+          tagBox.innerText = `✨ 分類：${finalChoice.category}`;
+          btn.disabled = false;
+        }
+      }, 80);
+    }
+
+    function addCustomFood() {
+      const input = document.getElementById("custom-name");
+      const val = input.value.trim();
+      if (!val) return;
+
+      foods.push({ name: val, emoji: "🍴", category: currentCategory === "全部" ? "台式經典" : currentCategory });
+      input.value = "";
+      renderTags();
+    }
+
+    function removeFood(idx) {
+      const filtered = getFilteredFoods();
+      const target = filtered[idx];
+      foods = foods.filter(f => f !== target);
+      renderTags();
+    }
+
+    // 初始化渲染
+    window.onload = function() {
+      renderTags();
+    };
+  </script>
+</body>
+</html>
